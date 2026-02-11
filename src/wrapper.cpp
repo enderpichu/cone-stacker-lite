@@ -23,7 +23,8 @@ int main(void)
 #if defined(PLATFORM_WEB)
     InitWindow(getBrowserWindowWidth(), getBrowserWindowHeight(), PROJECT_NAME);
 #else
-    InitWindow(720, 480, "MyRaylibProject");
+    InitWindow(720, 480, "ConeStackerLite");
+    SetTargetFPS(60);
     // Load icon here
     // Image windowIcon;
     // if (std::filesystem::exists("../assets") == false) {

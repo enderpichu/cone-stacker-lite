@@ -8,15 +8,27 @@
 #include <string>
 #include <filesystem>
 
+#include "cone.h"
+#include "pedestal.h"
+
 // Window setup
 int screenWidth = 720;
 const int screenHeight = 480;
 bool windowShouldClose = false;
 
+
 // Loading resources
 std::string assetPathPrefix = "../assets/";
 
-Texture2D nateTexture;
+//sum setup
+
+Texture2D coneTexture;
+
+
+Cone cone;
+Pedestal pedestal;
+
+
 
 // Draw text centered horizontally. Included because I use it all the time.
 void DrawTextCentered(const char* text, int posX, int posY, int fontSize, Color color) {
@@ -30,7 +42,8 @@ void init_app() {
     }
     
     // Load textures here
-    nateTexture = LoadTexture((assetPathPrefix + "nate.png").c_str());
+    // nateTexture = LoadTexture((assetPathPrefix + "nate.png").c_str());
+    coneTexture = LoadTexture((assetPathPrefix + "coneSprite.png").c_str());
     
     // InitAudioDevice();
     // Load sounds/music here
@@ -38,13 +51,19 @@ void init_app() {
 
 bool app_loop() {
     float relDt = GetFrameTime() * 60.0f; // Calculate delta time in relation to 60 frames per second
+
+    //updates
+
+    cone.Update();
     
     BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground(LIGHTGRAY);
         
-        DrawTextCentered("You've successfully set up your Raylib project!", screenWidth/2, screenHeight/2-100, 20, DARKGRAY);
-        DrawTextCentered("Say hi to Nate :)", screenWidth/2, screenHeight/2-70, 20, DARKGRAY);
-        DrawTexture(nateTexture, screenWidth/2 - nateTexture.width/2, screenHeight/2 - nateTexture.height/2, WHITE);
+        // DrawTextCentered("You've successfully set up your Raylib project!", screenWidth/2, screenHeight/2-100, 20, DARKGRAY);
+        // DrawTexture(nateTexture, screenWidth/2 - nateTexture.width/2, screenHeight/2 - nateTexture.height/2, WHITE);
+        DrawTexture(coneTexture, cone.GetConeX(), cone.GetConeY(), WHITE);
+        pedestal.Draw();
+                
     EndDrawing();
     
     return !windowShouldClose;
@@ -52,6 +71,7 @@ bool app_loop() {
 
 void deinit_app() {
     // Unload assets here
-    UnloadTexture(nateTexture);
+    // UnloadTexture(nateTexture);
+    UnloadTexture(coneTexture);
     // CloseAudioDevice();
 }
