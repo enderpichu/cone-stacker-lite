@@ -6,6 +6,7 @@ class Pedestal {
         public:
             Pedestal();
             void Draw() const;
+            int GetPedestalPosY() const;
 
         private:
             int x;

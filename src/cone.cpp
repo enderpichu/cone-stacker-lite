@@ -16,16 +16,13 @@ Cone::Cone()
 void Cone::Update() {
     //setting speedX to change X
     x += speedX;
+    y += speedY;
     //getting screen width and making it easier to type
     const int screenWidth = GetScreenWidth();
     const int screenHeight = GetScreenHeight();
     //cone bounces from sides of the screen
-    if ((x + width >= screenWidth - 150) || (x <= 150)) {
+    if ((x + width >= screenWidth - 250) || (x <= 250)) {
         speedX *= -1;
-    }
-
-    if (IsKeyPressed(KEY_SPACE)) {
-        
     }
 }
 void Cone::Draw() const {

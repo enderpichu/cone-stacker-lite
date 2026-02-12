@@ -3,7 +3,7 @@
 #include "raylib.h"
 
 Pedestal::Pedestal()
-    : x(0)
+    : x(-30)
     , y(75)
     , width(75)
     , height(25) {}
@@ -14,5 +14,10 @@ void Pedestal::Draw() const {
     const int screenWidth = GetScreenWidth();
     const int screenHeight = GetScreenHeight();
 
-    DrawRectangle(screenWidth/2.0f + x, screenHeight/2.0f + y, width, height, gronly);
+    DrawRectangle(screenWidth/2.0f - width/2.0f, screenHeight/2.0f + y, width, height, gronly);
+}
+
+int Pedestal::GetPedestalPosY() const {
+    const int screenHeight = GetScreenHeight();
+    return screenHeight/2 + height + 20;
 }
