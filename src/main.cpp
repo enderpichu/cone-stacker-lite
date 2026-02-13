@@ -35,8 +35,12 @@ std::string assetPathPrefix = "../assets/";
 //returns true when you lose
 bool gameOver = false;
 
+//returns true when game startsup
+bool mainMenu = true;
+
 Texture2D coneTexture;
 Texture2D coneGameOver;
+Texture2D coneMainMenu;
 
 ConeNumberSetup conesetup;
 Cone cone;
@@ -64,6 +68,7 @@ void init_app() {
     // nateTexture = LoadTexture((assetPathPrefix + "nate.png").c_str());
     coneTexture = LoadTexture((assetPathPrefix + "coneSprite.png").c_str());
     coneGameOver = LoadTexture((assetPathPrefix + "gameOverCone.png").c_str());
+    coneMainMenu = LoadTexture((assetPathPrefix + "coneMainMenu.png").c_str());
 
 
     
@@ -83,7 +88,7 @@ bool app_loop() {
         if (cone.GetConeX() > (screenWidth/2 - coneTexture.width) && cone.GetConeX() < (screenWidth/2 + coneTexture.width)) {
         for (int i = 0; i < 1; i++) {
             if (conesetup.coneNumbers < MAX_CONES) {
-            conestack[conesetup.coneNumbers].position.y = pedestal.GetPedestalPosY();
+            conestack[conesetup.coneNumbers].position.y = pedestal.GetPedestalPosY() - ((conesetup.coneNumbers % 20) * 8);
                     conesetup.coneNumbers ++;
                 }
             }
@@ -93,10 +98,23 @@ bool app_loop() {
             gameOver = true;
         }
     }
-    // TODO: make cone sprites stack (most likely just draw on top), playtest to see if hitbox needs adjustments
+
+    if (IsKeyPressed(KEY_ENTER) && gameOver) {
+        gameOver = false;
+    }
+
+    if (IsKeyPressed(KEY_ENTER) && mainMenu) {
+        mainMenu = false;
+    }
     BeginDrawing();
         ClearBackground(LIGHTGRAY);
-        if (!gameOver) {
+        if (mainMenu)
+        {
+            DrawTexture(coneMainMenu, screenWidth/2 - coneMainMenu.width/2, screenHeight/2 - coneMainMenu.height/2, WHITE);
+            DrawTextCentered("Welcome to Cone Stacker Lite! ENTER to start.", screenWidth/2, 20, 20, BLACK);
+        }
+
+        else if (!gameOver) {
             for (int i = 0; i < conesetup.coneNumbers; i++) {
                 if (conesetup.coneNumbers > 0) {
                     DrawTexture(coneTexture, screenWidth/2 - 16, (int)conestack[i].position.y, WHITE);
@@ -107,8 +125,7 @@ bool app_loop() {
             DrawTextCentered(TextFormat("%i", conesetup.coneNumbers), screenWidth/2, 10, 20, BLACK);
     } else {
             DrawTexture(coneGameOver, screenWidth/2 - coneGameOver.width/2, screenHeight/2 - coneGameOver.height/2, WHITE);
-            //TODO: make enter restart game
-            DrawTextCentered("Game Over! ENTER to retart.", screenWidth/2, 20, 20, BLACK);
+            DrawTextCentered("Game Over! ENTER to restart.", screenWidth/2, 20, 20, BLACK);
 
     }
     EndDrawing();

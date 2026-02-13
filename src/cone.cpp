@@ -37,7 +37,7 @@ void Cone::Update(ConeNumberSetup& coneSetup) {
         resetApplied = false;
     }
 
-    if ((x + width >= screenWidth - 200) || (x <= 200)) {
+    if ((x + width >= screenWidth - 225) || (x <= 225)) {
         speedX *= -1;
     }
 
