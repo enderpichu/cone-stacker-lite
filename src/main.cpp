@@ -85,7 +85,7 @@ bool app_loop() {
 
     cone.Update(conesetup);
 
-    if (IsKeyPressed(KEY_SPACE)) {
+    if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
         if (cone.GetConeX() > (screenWidth/2 - coneTexture.width) && cone.GetConeX() < (screenWidth/2 + coneTexture.width)) {
         for (int i = 0; i < 1; i++) {
             if (conesetup.coneNumbers < MAX_CONES) {
