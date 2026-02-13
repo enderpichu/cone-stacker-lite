@@ -19,6 +19,7 @@
 ConeNumberSetup::ConeNumberSetup() 
 : coneNumbers(0)
 , lastCone(0)
+, coneLevelUpSpeed(0)
 {}
 
 // Window setup

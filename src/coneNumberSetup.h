@@ -8,7 +8,5 @@ class ConeNumberSetup {
 
             int lastCone;
             int coneNumbers;
-
-        private:
-
+            int coneLevelUpSpeed;
 };

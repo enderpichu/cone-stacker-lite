@@ -137,7 +137,7 @@ jobs:
     - name: Rename html file
       run: |
           cd build/
-          mv MyRaylibProject.html index.html
+          mv ConeStackerLite.html index.html
           cd ../
       shell: bash
     
