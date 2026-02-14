@@ -22,6 +22,7 @@ ConeNumberSetup::ConeNumberSetup()
 , coneLevelUpSpeed(0)
 {}
 
+static int prevClear = 0;
 // Window setup
 int screenWidth = 720;
 const int screenHeight = 480;
@@ -85,8 +86,10 @@ bool app_loop() {
 
     cone.Update(conesetup);
 
+    int newStack = (conesetup.coneNumbers / 20) * 20;
+
     if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        if (cone.GetConeX() > (screenWidth/2 - coneTexture.width - 8) && cone.GetConeX() < (screenWidth/2 + coneTexture.width + 8)) {
+        if (cone.GetConeX() > (screenWidth/2 - coneTexture.width - 100) && cone.GetConeX() < (screenWidth/2 + coneTexture.width + 100)) {
         for (int i = 0; i < 1; i++) {
             if (conesetup.coneNumbers < MAX_CONES) {
             conestack[conesetup.coneNumbers].position.y = pedestal.GetPedestalPosY() - ((conesetup.coneNumbers % 20) * 8);
@@ -96,6 +99,7 @@ bool app_loop() {
         }
         else {
             conesetup.coneNumbers = 0;
+            prevClear = 0;
             gameOver = true;
         }
     }
@@ -107,6 +111,11 @@ bool app_loop() {
     if (IsKeyPressed(KEY_ENTER) && mainMenu) {
         mainMenu = false;
     }
+
+    if(conesetup.coneNumbers % 20 == 0 && conesetup.coneNumbers > prevClear) {
+    memset(conestack, 0, MAX_CONES*sizeof(conestack));
+    prevClear = conesetup.coneNumbers;
+    }
     BeginDrawing();
         ClearBackground(LIGHTGRAY);
         if (mainMenu)
@@ -116,7 +125,7 @@ bool app_loop() {
         }
 
         else if (!gameOver) {
-            for (int i = 0; i < conesetup.coneNumbers; i++) {
+            for (int i = newStack; i < conesetup.coneNumbers; i++) {
                 if (conesetup.coneNumbers > 0) {
                     DrawTexture(coneTexture, screenWidth/2 - 16, (int)conestack[i].position.y, WHITE);
                 }
@@ -124,12 +133,12 @@ bool app_loop() {
                     DrawTexture(coneTexture, cone.GetConeX(), cone.GetConeY(), WHITE);
                     pedestal.Draw();
                     DrawTextCentered(TextFormat("%i", conesetup.coneNumbers), screenWidth/2, 10, 20, BLACK);
-    }
+                }
                 else {
                     DrawTexture(coneGameOver, screenWidth/2 - coneGameOver.width/2, screenHeight/2 - coneGameOver.height/2, WHITE);
                     DrawTextCentered("Game Over! ENTER to restart.", screenWidth/2, 20, 20, BLACK);
 
-    }
+                }
     EndDrawing();
     
     return !windowShouldClose;
