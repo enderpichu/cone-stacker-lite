@@ -1,5 +1,6 @@
 *.exe
 *.dsym
+*.json
 main
 game
 /save/*

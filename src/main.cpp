@@ -7,6 +7,8 @@
 #include "main.hpp"
 #include <string>
 #include <filesystem>
+#include <fstream>
+#include <sstream>
 
 #include "cone.h"
 #include "pedestal.h"
@@ -40,6 +42,10 @@ bool gameOver = false;
 //returns true when game startsup
 bool mainMenu = true;
 
+static int highScore = 0;
+static const char* kSaveFileName = "save.json";
+bool newHi = false;
+
 Texture2D coneTexture;
 Texture2D coneGameOver;
 Texture2D coneMainMenu;
@@ -61,10 +67,54 @@ void DrawTextCentered(const char* text, int posX, int posY, int fontSize, Color 
     DrawText(text, posX-(textWidth/2), posY, fontSize, color);
 }
 
+static int LoadHighScore(const char* path) {
+    std::ifstream in(path);
+    if (!in.is_open()) {
+        return 0;
+    }
+
+    std::stringstream buffer;
+    buffer << in.rdbuf();
+    std::string content = buffer.str();
+    std::size_t pos = content.find("highScore");
+    if (pos == std::string::npos) {
+        return 0;
+    }
+
+    pos = content.find(":", pos);
+    if (pos == std::string::npos) {
+        return 0;
+    }
+
+    pos += 1;
+    while (pos < content.size() && (content[pos] == ' ' || content[pos] == '\t')) {
+        pos++;
+    }
+
+    int value = 0;
+    while (pos < content.size() && content[pos] >= '0' && content[pos] <= '9') {
+        value = (value * 10) + (content[pos] - '0');
+        pos++;
+    }
+
+    return value;
+}
+
+static void SaveHighScore(const char* path, int score) {
+    std::ofstream out(path, std::ios::trunc);
+    if (!out.is_open()) {
+        return;
+    }
+
+    out << "{\n  \"highScore\": " << score << "\n}\n";
+}
+
 void init_app() {
     if (std::filesystem::exists("../assets") == false) {
         assetPathPrefix = "assets/";
     }
+
+    highScore = LoadHighScore(kSaveFileName);
     
     // Load textures here
     // nateTexture = LoadTexture((assetPathPrefix + "nate.png").c_str());
@@ -86,6 +136,7 @@ bool app_loop() {
 
     cone.Update(conesetup);
 
+
     int newStack = (conesetup.coneNumbers / 20) * 20;
 
     if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -94,17 +145,23 @@ bool app_loop() {
             if (conesetup.coneNumbers < MAX_CONES) {
             conestack[conesetup.coneNumbers].position.y = pedestal.GetPedestalPosY() - ((conesetup.coneNumbers % 20) * 8);
                     conesetup.coneNumbers ++;
+                    if (conesetup.coneNumbers > highScore) {
+                        highScore = conesetup.coneNumbers;
+                        newHi = true;
+                    }
                 }
             }
         }
         else {
             conesetup.coneNumbers = 0;
             prevClear = 0;
+            SaveHighScore(kSaveFileName, highScore);
             gameOver = true;
         }
     }
 
     if (IsKeyPressed(KEY_ENTER) && gameOver) {
+        newHi = false;
         gameOver = false;
     }
 
@@ -116,6 +173,8 @@ bool app_loop() {
     memset(conestack, 0, MAX_CONES*sizeof(conestack));
     prevClear = conesetup.coneNumbers;
     }
+
+    int coneScores = conesetup.coneNumbers;
     BeginDrawing();
         ClearBackground(LIGHTGRAY);
         if (mainMenu)
@@ -137,8 +196,12 @@ bool app_loop() {
                 else {
                     DrawTexture(coneGameOver, screenWidth/2 - coneGameOver.width/2, screenHeight/2 - coneGameOver.height/2, WHITE);
                     DrawTextCentered("Game Over! ENTER to restart.", screenWidth/2, 20, 20, BLACK);
-
+                    if (newHi) {
+                        DrawTextCentered("NEW HI!", screenWidth/2, 425, 40, BLACK);
+                    }
                 }
+
+        DrawText(TextFormat("HI: %i", highScore), screenWidth - 100, 30, 20, BLACK);
     EndDrawing();
     
     return !windowShouldClose;
@@ -147,6 +210,7 @@ bool app_loop() {
 void deinit_app() {
     // Unload assets here
     free (conestack);
+    SaveHighScore(kSaveFileName, highScore);
     UnloadTexture(coneTexture);
     // CloseAudioDevice();
 }
