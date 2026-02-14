@@ -7,7 +7,6 @@ class Pedestal {
             Pedestal();
             void Draw() const;
             int GetPedestalPosY() const;
-
         private:
             int x;
             int y;

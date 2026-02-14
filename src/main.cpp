@@ -50,6 +50,11 @@ Texture2D coneTexture;
 Texture2D coneGameOver;
 Texture2D coneMainMenu;
 
+Sound lose;
+Sound stack;
+Sound firstStack;
+Music background;
+
 ConeNumberSetup conesetup;
 Cone cone;
 Pedestal pedestal;
@@ -124,8 +129,12 @@ void init_app() {
 
 
     
-    // InitAudioDevice();
-    // Load sounds/music here
+    InitAudioDevice();
+        lose = LoadSound((assetPathPrefix + "coneLose.ogg").c_str());
+        stack = LoadSound((assetPathPrefix + "coneStack.ogg").c_str());
+        firstStack = LoadSound((assetPathPrefix + "firstConeStacked.ogg").c_str());
+        background = LoadMusicStream((assetPathPrefix + "backgroundCone.ogg").c_str());
+        PlayMusicStream(background);
 }
     ConeStack *conestack = (ConeStack *)malloc(MAX_CONES*sizeof(conestack));
 
@@ -133,6 +142,7 @@ bool app_loop() {
     float relDt = GetFrameTime() * 60.0f; // Calculate delta time in relation to 60 frames per second
 
     //updates
+    UpdateMusicStream(background);
 
     cone.Update(conesetup);
 
@@ -145,6 +155,12 @@ bool app_loop() {
             if (conesetup.coneNumbers < MAX_CONES) {
             conestack[conesetup.coneNumbers].position.y = pedestal.GetPedestalPosY() - ((conesetup.coneNumbers % 20) * 8);
                     conesetup.coneNumbers ++;
+                    if (conesetup.coneNumbers % 20 == 1) {
+                        PlaySound(firstStack);
+                    }
+                    else {
+                        PlaySound(stack);
+                    }
                     if (conesetup.coneNumbers > highScore) {
                         highScore = conesetup.coneNumbers;
                         newHi = true;
@@ -153,6 +169,7 @@ bool app_loop() {
             }
         }
         else {
+            PlaySound(lose);
             conesetup.coneNumbers = 0;
             prevClear = 0;
             SaveHighScore(kSaveFileName, highScore);
@@ -161,6 +178,7 @@ bool app_loop() {
     }
 
     if (IsKeyPressed(KEY_ENTER) && gameOver) {
+        StopSound(lose);
         newHi = false;
         gameOver = false;
     }
@@ -197,11 +215,12 @@ bool app_loop() {
                     DrawTexture(coneGameOver, screenWidth/2 - coneGameOver.width/2, screenHeight/2 - coneGameOver.height/2, WHITE);
                     DrawTextCentered("Game Over! ENTER to restart.", screenWidth/2, 20, 20, BLACK);
                     if (newHi) {
-                        DrawTextCentered("NEW HI!", screenWidth/2, 425, 40, BLACK);
+                        DrawTextCentered("NEW HIGH!", screenWidth/2, 425, 40, BLACK);
                     }
                 }
-
+        if (highScore != 0) {
         DrawText(TextFormat("HI: %i", highScore), screenWidth - 100, 30, 20, BLACK);
+        }
     EndDrawing();
     
     return !windowShouldClose;
@@ -212,5 +231,11 @@ void deinit_app() {
     free (conestack);
     SaveHighScore(kSaveFileName, highScore);
     UnloadTexture(coneTexture);
-    // CloseAudioDevice();
+    UnloadTexture(coneGameOver);
+    UnloadTexture(coneMainMenu);
+    UnloadSound(lose);
+    UnloadSound(stack);
+    UnloadSound(firstStack);
+    UnloadMusicStream(background);
+    CloseAudioDevice();
 }
