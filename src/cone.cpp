@@ -28,7 +28,7 @@ void Cone::Update(ConeNumberSetup& coneSetup) {
     }
 
     if (coneSetup.coneNumbers / 20 > coneSetup.coneLevelUpSpeed) {
-        speedX += (speedX >= 0 ? 4 : -4);
+        speedX += (speedX >= 0 ? 2 : -2);
         coneSetup.coneLevelUpSpeed = coneSetup.coneNumbers / 20;
     }
 

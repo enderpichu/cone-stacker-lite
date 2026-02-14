@@ -89,7 +89,7 @@ bool app_loop() {
     int newStack = (conesetup.coneNumbers / 20) * 20;
 
     if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        if (cone.GetConeX() > (screenWidth/2 - coneTexture.width - 100) && cone.GetConeX() < (screenWidth/2 + coneTexture.width + 100)) {
+        if (cone.GetConeX() > (screenWidth/2 - coneTexture.width - 10) && cone.GetConeX() < (screenWidth/2 + coneTexture.width + 10)) {
         for (int i = 0; i < 1; i++) {
             if (conesetup.coneNumbers < MAX_CONES) {
             conestack[conesetup.coneNumbers].position.y = pedestal.GetPedestalPosY() - ((conesetup.coneNumbers % 20) * 8);
