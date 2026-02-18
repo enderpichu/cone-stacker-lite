@@ -23,7 +23,11 @@ int main(void)
 #if defined(PLATFORM_WEB)
     InitWindow(getBrowserWindowWidth(), getBrowserWindowHeight(), PROJECT_NAME);
 #else
+    SetConfigFlags(FLAG_WINDOW_HIGHDPI);
     InitWindow(720, 480, "ConeStackerLite");
+    // Scale window size by DPI so it looks the same physical size on HiDPI displays
+    Vector2 scale = GetWindowScaleDPI();
+    SetWindowSize((int)(720 * scale.x), (int)(480 * scale.y));
     SetTargetFPS(60);
     // Load icon here
     // Image windowIcon;
