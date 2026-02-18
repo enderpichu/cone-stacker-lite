@@ -13,6 +13,7 @@
 #include "cone.h"
 #include "pedestal.h"
 #include "coneNumberSetup.h"
+#include "powerUpLocator.h"
 
 #include "stdlib.h"
 
@@ -58,6 +59,7 @@ Music background;
 ConeNumberSetup conesetup;
 Cone cone;
 Pedestal pedestal;
+PowerUpLocation powerUps;
 typedef struct ConeStack {
     Vector2 position;
 } ConeStack;
@@ -145,11 +147,12 @@ bool app_loop() {
     UpdateMusicStream(background);
 
     cone.Update(conesetup);
+    powerUps.Update(conesetup);
 
 
     int newStack = (conesetup.coneNumbers / 20) * 20;
 
-    if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+    if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !gameOver && !mainMenu) {
         if (cone.GetConeX() > (screenWidth/2 - coneTexture.width - 10) && cone.GetConeX() < (screenWidth/2 + coneTexture.width + 10)) {
         for (int i = 0; i < 1; i++) {
             if (conesetup.coneNumbers < MAX_CONES) {
@@ -201,7 +204,7 @@ bool app_loop() {
             DrawTextCentered("Welcome to Cone Stacker Lite! ENTER to start.", screenWidth/2, 20, 20, BLACK);
         }
 
-        else if (!gameOver) {
+        else if (!gameOver && !mainMenu) {
             for (int i = newStack; i < conesetup.coneNumbers; i++) {
                 if (conesetup.coneNumbers > 0) {
                     DrawTexture(coneTexture, screenWidth/2 - 16, (int)conestack[i].position.y, WHITE);
@@ -209,6 +212,7 @@ bool app_loop() {
             }
                     DrawTexture(coneTexture, cone.GetConeX(), cone.GetConeY(), WHITE);
                     pedestal.Draw();
+                    powerUps.Draw();
                     DrawTextCentered(TextFormat("%i", conesetup.coneNumbers), screenWidth/2, 10, 20, BLACK);
                 }
                 else {
