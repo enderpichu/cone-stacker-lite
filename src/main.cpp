@@ -148,6 +148,23 @@ bool app_loop() {
 
     cone.Update(conesetup);
     powerUps.Update(conesetup);
+    
+    int pickedPower = powerUps.EatPowerUp();
+        if (pickedPower != 0) {
+            switch (pickedPower) {
+                case 1:
+                    conesetup.coneNumbers += 5;
+                break;
+                    
+                case 2:
+
+                break;
+
+                case 3:
+
+                break;
+            }
+        }
 
 
     int newStack = (conesetup.coneNumbers / 20) * 20;
@@ -212,7 +229,6 @@ bool app_loop() {
             }
                     DrawTexture(coneTexture, cone.GetConeX(), cone.GetConeY(), WHITE);
                     pedestal.Draw();
-                    powerUps.Draw();
                     DrawTextCentered(TextFormat("%i", conesetup.coneNumbers), screenWidth/2, 10, 20, BLACK);
                 }
                 else {

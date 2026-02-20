@@ -88,20 +88,22 @@ void PowerUpLocation::Update(ConeNumberSetup& conesetup) {
     }
 }
 
-void PowerUpLocation::Draw() const {
-    if (showPowerUp != 1) {
+void PowerUpLocation::PickPowerUp() const {
+    if (powerUpPicker == 1) {
         return;
     }
-    const Color Power1 = {0,0,0,255};
-    const Color Power2 = {0,0,0,255};
-    const Color Power3 = {0,0,0,255};
-    if (powerUpPicker == 1) {
-        DrawCircle(x, y, radius, Power1);
-    }
     else if (powerUpPicker == 2) {
-        DrawCircle(x, y, radius, Power2);
+        return;
     }
     else if (powerUpPicker == 3) {
-        DrawCircle(x, y, radius, Power3);
+        return;
     }
 }
+
+int PowerUpLocation::EatPowerUp() {
+    if (isClaimed) {
+        isClaimed = false;
+        return powerUpPicker;
+    }
+    return 0;
+}   

@@ -9,10 +9,13 @@ class PowerUpLocation {
     public:
         PowerUpLocation();
         void Update(ConeNumberSetup& conesetup);
-        void Draw() const;
+        void PickPowerUp() const;
         int GetPowerUpY() const;
+        int GetPowerUpX() const;
         int showPowerUp;
         int powerUpPicker;
+        bool isClaimed;
+        int EatPowerUp();
 
 
     private:
@@ -21,7 +24,6 @@ class PowerUpLocation {
         int y;
         int speedY;
         int radius;
-        bool isClaimed;
         bool killedPowerUp;
         bool yReset;
         int updateTimer;
