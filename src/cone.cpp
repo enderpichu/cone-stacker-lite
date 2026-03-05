@@ -10,20 +10,23 @@ Cone::Cone()
     , speedY(0)
     , height(32)
     , width(32)
+    , slowDownTimer(0.0f)
+    , speedMultiplier(1.0f)
     , resetApplied(false)
+    , slowApplied(false)
     {}
 
   
 
 void Cone::Update(ConeNumberSetup& coneSetup) {
     //setting speedX to change X
-    x += speedX;
+    x += static_cast<int>(speedX * speedMultiplier);
     //getting screen width and making it easier to type
     const int screenWidth = GetScreenWidth();
     const int screenHeight = GetScreenHeight();
     //cone bounces from sides of the screen
     if (coneSetup.coneNumbers / 7 > coneSetup.lastCone) {
-        speedX += (speedX >= 0 ? 1 : -1);
+        speedX += (speedX >= 0 ? 1 * 1 : -1);
         coneSetup.lastCone = coneSetup.coneNumbers / 7;
     }
 
@@ -49,6 +52,20 @@ void Cone::Update(ConeNumberSetup& coneSetup) {
 }
 void Cone::Draw() const {
     DrawRectangle(x, y, width, height, WHITE);
+}
+
+void Cone::slowDownPUp() {
+    if (!slowApplied) {
+        slowDownTimer = 5.0f;
+        speedMultiplier = 0.5f;
+        slowApplied = true;
+    }
+
+    slowDownTimer -= GetFrameTime();
+    if (slowDownTimer <= 0.0f) {
+        speedMultiplier = 1.0f;
+        slowApplied = false;
+    }
 }
 
 int Cone::GetConeX() const {

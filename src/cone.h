@@ -10,6 +10,9 @@ class Cone {
         void Draw() const;
         int GetConeX() const;
         int GetConeY() const;
+        void slowDownPUp();
+        bool slowApplied;
+
 
     private:
         int x;
@@ -18,5 +21,7 @@ class Cone {
         int speedY;
         int height;
         int width;
+        float slowDownTimer;
+        float speedMultiplier;
         bool resetApplied;
 };

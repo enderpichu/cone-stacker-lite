@@ -37,7 +37,7 @@ std::string assetPathPrefix = "../assets/";
 
 //sum setup
 
-//returns true when you lose
+//returns true when you lose;
 bool gameOver = false;
 
 //returns true when game startsup
@@ -47,9 +47,16 @@ static int highScore = 0;
 static const char* kSaveFileName = "save.json";
 bool newHi = false;
 
+double timer = 2.5;
+bool slowDown;
+
 Texture2D coneTexture;
 Texture2D coneGameOver;
 Texture2D coneMainMenu;
+
+Texture2D teamColor;
+Texture2D timeLord;
+Texture2D gimmighoul;
 
 Sound lose;
 Sound stack;
@@ -129,8 +136,10 @@ void init_app() {
     coneGameOver = LoadTexture((assetPathPrefix + "gameOverCone.png").c_str());
     coneMainMenu = LoadTexture((assetPathPrefix + "coneMainMenu.png").c_str());
 
+    teamColor = LoadTexture((assetPathPrefix + "teamColorsPowerUp.png").c_str());
+    timeLord = LoadTexture((assetPathPrefix + "timePowerUp.png").c_str());
+    gimmighoul = LoadTexture((assetPathPrefix + "goldenConePowerUp.png").c_str());
 
-    
     InitAudioDevice();
         lose = LoadSound((assetPathPrefix + "coneLose.ogg").c_str());
         stack = LoadSound((assetPathPrefix + "coneStack.ogg").c_str());
@@ -143,10 +152,14 @@ void init_app() {
 bool app_loop() {
     float relDt = GetFrameTime() * 60.0f; // Calculate delta time in relation to 60 frames per second
 
-    //updates
+    //
     UpdateMusicStream(background);
 
     cone.Update(conesetup);
+    if (slowDown) {
+        cone.slowDownPUp(); // tick timer & apply half speed
+        if (!cone.slowApplied) slowDown = false; // timer expired
+    }
     powerUps.Update(conesetup);
     
     int pickedPower = powerUps.EatPowerUp();
@@ -157,7 +170,7 @@ bool app_loop() {
                 break;
                     
                 case 2:
-
+                    slowDown = true;
                 break;
 
                 case 3:
@@ -169,7 +182,7 @@ bool app_loop() {
 
     int newStack = (conesetup.coneNumbers / 20) * 20;
 
-    if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !gameOver && !mainMenu) {
+    if ((IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) && !gameOver && !mainMenu) {
         if (cone.GetConeX() > (screenWidth/2 - coneTexture.width - 10) && cone.GetConeX() < (screenWidth/2 + coneTexture.width + 10)) {
         for (int i = 0; i < 1; i++) {
             if (conesetup.coneNumbers < MAX_CONES) {
@@ -253,6 +266,9 @@ void deinit_app() {
     UnloadTexture(coneTexture);
     UnloadTexture(coneGameOver);
     UnloadTexture(coneMainMenu);
+    UnloadTexture(teamColor);
+    UnloadTexture(timeLord);
+    UnloadTexture(gimmighoul);
     UnloadSound(lose);
     UnloadSound(stack);
     UnloadSound(firstStack);

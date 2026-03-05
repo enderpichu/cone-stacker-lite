@@ -103,7 +103,7 @@ void PowerUpLocation::PickPowerUp() const {
 int PowerUpLocation::EatPowerUp() {
     if (isClaimed) {
         isClaimed = false;
-        return powerUpPicker;
+        return powerUpTester;
     }
     return 0;
 }   

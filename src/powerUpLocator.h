@@ -14,6 +14,7 @@ class PowerUpLocation {
         int GetPowerUpX() const;
         int showPowerUp;
         int powerUpPicker;
+        int powerUpTester;
         bool isClaimed;
         int EatPowerUp();
 
