@@ -11,7 +11,9 @@ class Cone {
         int GetConeX() const;
         int GetConeY() const;
         void slowDownPUp();
+        void TeamColorizePUp();
         bool slowApplied;
+        bool IsPeak;
 
 
     private:
@@ -22,6 +24,7 @@ class Cone {
         int height;
         int width;
         float slowDownTimer;
+        float teamColorizeTimer;
         float speedMultiplier;
         bool resetApplied;
 };

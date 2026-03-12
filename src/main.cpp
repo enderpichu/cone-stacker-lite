@@ -49,8 +49,10 @@ bool newHi = false;
 
 double timer = 2.5;
 bool slowDown;
+bool teamColorize;
 
 Texture2D coneTexture;
+Texture2D teamCone;
 Texture2D coneGameOver;
 Texture2D coneMainMenu;
 
@@ -133,6 +135,8 @@ void init_app() {
     // Load textures here
     // nateTexture = LoadTexture((assetPathPrefix + "nate.png").c_str());
     coneTexture = LoadTexture((assetPathPrefix + "coneSprite.png").c_str());
+    teamCone = LoadTexture((assetPathPrefix + "truviancone.png").c_str());
+
     coneGameOver = LoadTexture((assetPathPrefix + "gameOverCone.png").c_str());
     coneMainMenu = LoadTexture((assetPathPrefix + "coneMainMenu.png").c_str());
 
@@ -162,7 +166,7 @@ bool app_loop() {
     }
     powerUps.Update(conesetup);
     
-    int pickedPower = powerUps.EatPowerUp();
+    int pickedPower = powerUps.TestPowerUp();
         if (pickedPower != 0) {
             switch (pickedPower) {
                 case 1:
@@ -174,7 +178,7 @@ bool app_loop() {
                 break;
 
                 case 3:
-
+                    teamColorize = true;
                 break;
             }
         }
@@ -269,6 +273,7 @@ void deinit_app() {
     UnloadTexture(teamColor);
     UnloadTexture(timeLord);
     UnloadTexture(gimmighoul);
+    UnloadTexture(teamCone);
     UnloadSound(lose);
     UnloadSound(stack);
     UnloadSound(firstStack);

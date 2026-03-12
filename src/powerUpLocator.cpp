@@ -70,7 +70,7 @@ void PowerUpLocation::Update(ConeNumberSetup& conesetup) {
                 yReset = true;
             }
         if (speedTimeout > 15) {
-            speedY += (speedY >= 0 ? 10 : -10); //speed it up every 1/4 second
+            speedY += (speedY >= 0 ? 5 : -5); //speed it up every 1/4 second
             speedTimeout = 0;
         }
             if ((y + radius >= screenHeight) || (y - radius <= 0)) {
@@ -103,7 +103,15 @@ void PowerUpLocation::PickPowerUp() const {
 int PowerUpLocation::EatPowerUp() {
     if (isClaimed) {
         isClaimed = false;
+        return powerUpPicker;
+    }
+    return 0;
+}
+
+int PowerUpLocation::TestPowerUp() {
+    if (isClaimed) {
+        isClaimed = false;
         return powerUpTester;
     }
     return 0;
-}   
+}

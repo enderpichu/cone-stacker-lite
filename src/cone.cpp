@@ -11,6 +11,7 @@ Cone::Cone()
     , height(32)
     , width(32)
     , slowDownTimer(0.0f)
+    , teamColorizeTimer(0.0f)
     , speedMultiplier(1.0f)
     , resetApplied(false)
     , slowApplied(false)
@@ -65,6 +66,18 @@ void Cone::slowDownPUp() {
     if (slowDownTimer <= 0.0f) {
         speedMultiplier = 1.0f;
         slowApplied = false;
+    }
+}
+
+void Cone::TeamColorizePUp() {
+    if (!IsPeak) {
+        teamColorizeTimer = 10.0f;
+        IsPeak = true;
+    }
+
+    teamColorizeTimer -= GetFrameTime();
+    if (teamColorizeTimer <= 0.0f) {
+        IsPeak = false;
     }
 }
 

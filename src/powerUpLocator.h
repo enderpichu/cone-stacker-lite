@@ -17,6 +17,7 @@ class PowerUpLocation {
         int powerUpTester;
         bool isClaimed;
         int EatPowerUp();
+        int TestPowerUp();
 
 
     private:
