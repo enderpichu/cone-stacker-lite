@@ -156,6 +156,8 @@ void init_app() {
 bool app_loop() {
     float relDt = GetFrameTime() * 60.0f; // Calculate delta time in relation to 60 frames per second
 
+    Texture2D& coneTex = teamColorize ? teamCone : coneTexture;
+
     //
     UpdateMusicStream(background);
 
@@ -164,13 +166,17 @@ bool app_loop() {
         cone.slowDownPUp(); // tick timer & apply half speed
         if (!cone.slowApplied) slowDown = false; // timer expired
     }
+    if (teamColorize) {
+        cone.TeamColorizePUp();
+        if (!cone.IsPeak) teamColorize = false; //same as above
+    }
     powerUps.Update(conesetup);
     
     int pickedPower = powerUps.TestPowerUp();
         if (pickedPower != 0) {
             switch (pickedPower) {
                 case 1:
-                    conesetup.coneNumbers += 5;
+                    conesetup.coneNumbers += 5; //golden cone, not difficult
                 break;
                     
                 case 2:
@@ -241,10 +247,10 @@ bool app_loop() {
         else if (!gameOver && !mainMenu) {
             for (int i = newStack; i < conesetup.coneNumbers; i++) {
                 if (conesetup.coneNumbers > 0) {
-                    DrawTexture(coneTexture, screenWidth/2 - 16, (int)conestack[i].position.y, WHITE);
+                    DrawTexture(coneTex, screenWidth/2 - 16, (int)conestack[i].position.y, WHITE);
                 }
             }
-                    DrawTexture(coneTexture, cone.GetConeX(), cone.GetConeY(), WHITE);
+                    DrawTexture(coneTex, cone.GetConeX(), cone.GetConeY(), WHITE);
                     pedestal.Draw();
                     DrawTextCentered(TextFormat("%i", conesetup.coneNumbers), screenWidth/2, 10, 20, BLACK);
                 }
@@ -255,6 +261,8 @@ bool app_loop() {
                         DrawTextCentered("NEW HIGH!", screenWidth/2, 425, 40, BLACK);
                     }
                 }
+
+
         if (highScore != 0) {
         DrawText(TextFormat("HI: %i", highScore), screenWidth - 100, 30, 20, BLACK);
         }

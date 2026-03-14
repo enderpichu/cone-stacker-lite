@@ -21,6 +21,7 @@ PowerUpLocation::PowerUpLocation()
 , updateTimer(0)
 , lifetimeTimer(0)
 , speedTimeout(0)
+, powerUpTester(3)
 {}
 
 bool isClaimable(ConeNumberSetup& conesetup, PowerUpLocation& powerUp) {
