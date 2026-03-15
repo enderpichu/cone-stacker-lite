@@ -1,5 +1,6 @@
 #include "powerUpLocator.h"
 #include "coneNumberSetup.h"
+#include <iostream>
 
 #include "raylib.h"
 
@@ -11,7 +12,7 @@ PowerUpLocation::PowerUpLocation()
 : randomizer(0)
 , showPowerUp(0)
 , powerUpPicker(0)
-, x(0)
+, x(50)
 , y(30)
 , speedY(10)
 , radius(16)
@@ -31,10 +32,26 @@ bool isClaimable(ConeNumberSetup& conesetup, PowerUpLocation& powerUp) {
     return false;
 }
 
+void PowerUpLocation::Draw(Texture2D& texture1, Texture2D& texture2, Texture2D& texture3) const {
+    if (powerUpPicker != 0) {
+        switch (powerUpPicker) {
+            case 1:
+                DrawTexture(texture1, x, y, WHITE);
+            break;
+            case 2:
+                DrawTexture(texture2, x, y, WHITE);
+            break;
+            case 3:
+                DrawTexture(texture3, x, y, WHITE);
+            break;
+        }
+    }
+}
+
 void PowerUpLocation::Update(ConeNumberSetup& conesetup) {
-    if (conesetup.coneNumbers > 14) {
+    if (conesetup.coneNumbers > 3) {
         updateTimer++;
-        if (updateTimer >= 300) { // chance of powerup every ~5 sec
+        if (updateTimer >= 60) { // chance of powerup every ~1 sec
             randomizer = GetRandomValue(16, 66);
             showPowerUp = GetRandomValue(0, 3) == 0 ? 1 : 0;
             x = randomizer;
@@ -46,6 +63,10 @@ void PowerUpLocation::Update(ConeNumberSetup& conesetup) {
                 powerUpPicker = GetRandomValue(1, 3); // selects power up type randomly between three options
             }
         }
+    }
+    std::cout << showPowerUp << std::endl;
+    if (showPowerUp == 1) {
+    std::cout << powerUpPicker << std::endl;
     }
 
     if (conesetup.coneNumbers > 14 && showPowerUp == 1 && !killedPowerUp) {
@@ -71,7 +92,7 @@ void PowerUpLocation::Update(ConeNumberSetup& conesetup) {
                 yReset = true;
             }
         if (speedTimeout > 15) {
-            speedY += (speedY >= 0 ? 5 : -5); //speed it up every 1/4 second
+            speedY += (speedY >= 0 ? 2 : -2); //speed it up every 1/4 second
             speedTimeout = 0;
         }
             if ((y + radius >= screenHeight) || (y - radius <= 0)) {

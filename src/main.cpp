@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <fstream>
 #include <sstream>
+#include <cstring>
 
 #include "cone.h"
 #include "pedestal.h"
@@ -17,15 +18,6 @@
 
 #include "stdlib.h"
 
-#define MAX_CONES 1500
-
-ConeNumberSetup::ConeNumberSetup() 
-: coneNumbers(0)
-, lastCone(0)
-, coneLevelUpSpeed(0)
-{}
-
-static int prevClear = 0;
 // Window setup
 int screenWidth = 720;
 const int screenHeight = 480;
@@ -54,6 +46,7 @@ bool teamColorize;
 Texture2D coneTexture;
 Texture2D teamCone;
 Texture2D coneGameOver;
+Texture2D teamGameOver;
 Texture2D coneMainMenu;
 
 Texture2D teamColor;
@@ -69,9 +62,7 @@ ConeNumberSetup conesetup;
 Cone cone;
 Pedestal pedestal;
 PowerUpLocation powerUps;
-typedef struct ConeStack {
-    Vector2 position;
-} ConeStack;
+ConeStack conestack[MAX_CONES] = {};
 
 void NewConeInStack(Texture2D texture, int posX, int posY, Color color) {
     
@@ -135,9 +126,10 @@ void init_app() {
     // Load textures here
     // nateTexture = LoadTexture((assetPathPrefix + "nate.png").c_str());
     coneTexture = LoadTexture((assetPathPrefix + "coneSprite.png").c_str());
-    teamCone = LoadTexture((assetPathPrefix + "truviancone.png").c_str());
+    teamCone = LoadTexture((assetPathPrefix + "truvianCone.png").c_str());
 
     coneGameOver = LoadTexture((assetPathPrefix + "gameOverCone.png").c_str());
+    teamGameOver = LoadTexture((assetPathPrefix + "truvianGameOver.png").c_str());
     coneMainMenu = LoadTexture((assetPathPrefix + "coneMainMenu.png").c_str());
 
     teamColor = LoadTexture((assetPathPrefix + "teamColorsPowerUp.png").c_str());
@@ -151,7 +143,6 @@ void init_app() {
         background = LoadMusicStream((assetPathPrefix + "backgroundCone.ogg").c_str());
         PlayMusicStream(background);
 }
-    ConeStack *conestack = (ConeStack *)malloc(MAX_CONES*sizeof(conestack));
 
 bool app_loop() {
     float relDt = GetFrameTime() * 60.0f; // Calculate delta time in relation to 60 frames per second
@@ -160,8 +151,8 @@ bool app_loop() {
 
     //
     UpdateMusicStream(background);
-
     cone.Update(conesetup);
+    conesetup.Update(cone, pedestal, screenWidth, stack, firstStack, lose, coneTex, highScore, gameOver, mainMenu, newHi);
     if (slowDown) {
         cone.slowDownPUp(); // tick timer & apply half speed
         if (!cone.slowApplied) slowDown = false; // timer expired
@@ -172,7 +163,7 @@ bool app_loop() {
     }
     powerUps.Update(conesetup);
     
-    int pickedPower = powerUps.TestPowerUp();
+    int pickedPower = powerUps.EatPowerUp();
         if (pickedPower != 0) {
             switch (pickedPower) {
                 case 1:
@@ -188,37 +179,9 @@ bool app_loop() {
                 break;
             }
         }
-
+    powerUps.Draw(gimmighoul, timeLord, teamColor);
 
     int newStack = (conesetup.coneNumbers / 20) * 20;
-
-    if ((IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) && !gameOver && !mainMenu) {
-        if (cone.GetConeX() > (screenWidth/2 - coneTexture.width - 10) && cone.GetConeX() < (screenWidth/2 + coneTexture.width + 10)) {
-        for (int i = 0; i < 1; i++) {
-            if (conesetup.coneNumbers < MAX_CONES) {
-            conestack[conesetup.coneNumbers].position.y = pedestal.GetPedestalPosY() - ((conesetup.coneNumbers % 20) * 8);
-                    conesetup.coneNumbers ++;
-                    if (conesetup.coneNumbers % 20 == 1) {
-                        PlaySound(firstStack);
-                    }
-                    else {
-                        PlaySound(stack);
-                    }
-                    if (conesetup.coneNumbers > highScore) {
-                        highScore = conesetup.coneNumbers;
-                        newHi = true;
-                    }
-                }
-            }
-        }
-        else {
-            PlaySound(lose);
-            conesetup.coneNumbers = 0;
-            prevClear = 0;
-            SaveHighScore(kSaveFileName, highScore);
-            gameOver = true;
-        }
-    }
 
     if (IsKeyPressed(KEY_ENTER) && gameOver) {
         StopSound(lose);
@@ -230,9 +193,9 @@ bool app_loop() {
         mainMenu = false;
     }
 
-    if(conesetup.coneNumbers % 20 == 0 && conesetup.coneNumbers > prevClear) {
-    memset(conestack, 0, MAX_CONES*sizeof(conestack));
-    prevClear = conesetup.coneNumbers;
+    if(conesetup.coneNumbers % 20 == 0 && conesetup.coneNumbers > ConeNumberSetup::prevClear) {
+    memset(conestack, 0, sizeof(conestack));
+    ConeNumberSetup::prevClear = conesetup.coneNumbers;
     }
 
     int coneScores = conesetup.coneNumbers;
@@ -273,10 +236,10 @@ bool app_loop() {
 
 void deinit_app() {
     // Unload assets here
-    free (conestack);
     SaveHighScore(kSaveFileName, highScore);
     UnloadTexture(coneTexture);
     UnloadTexture(coneGameOver);
+    UnloadTexture(teamGameOver);
     UnloadTexture(coneMainMenu);
     UnloadTexture(teamColor);
     UnloadTexture(timeLord);

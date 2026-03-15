@@ -9,6 +9,7 @@ class PowerUpLocation {
     public:
         PowerUpLocation();
         void Update(ConeNumberSetup& conesetup);
+        void Draw(Texture2D& texture1, Texture2D& texture2, Texture2D& texture3) const;
         void PickPowerUp() const;
         int GetPowerUpY() const;
         int GetPowerUpX() const;
