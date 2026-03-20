@@ -15,7 +15,7 @@ PowerUpLocation::PowerUpLocation()
 , x(50)
 , y(30)
 , speedY(10)
-, radius(16)
+, heightAndWidth(64)
 , isClaimed(false)
 , killedPowerUp(false)
 , yReset(false)
@@ -36,13 +36,13 @@ void PowerUpLocation::Draw(Texture2D& texture1, Texture2D& texture2, Texture2D& 
     if (powerUpPicker != 0) {
         switch (powerUpPicker) {
             case 1:
-                DrawTexture(texture1, x, y, WHITE);
+                DrawTexture(texture1, x + texture1.width/2, y, WHITE);
             break;
             case 2:
-                DrawTexture(texture2, x, y, WHITE);
+                DrawTexture(texture2, x + texture2.width/2, y, WHITE);
             break;
             case 3:
-                DrawTexture(texture3, x, y, WHITE);
+                DrawTexture(texture3, x + texture3.width/2, y, WHITE);
             break;
         }
     }
@@ -64,49 +64,57 @@ void PowerUpLocation::Update(ConeNumberSetup& conesetup) {
             }
         }
     }
-    std::cout << showPowerUp << std::endl;
-    if (showPowerUp == 1) {
-    std::cout << powerUpPicker << std::endl;
-    }
+    // std::cout << showPowerUp << std::endl;
+    // if (showPowerUp == 1) {
+    // std::cout << powerUpPicker << std::endl;
+    // }
 
     if (conesetup.coneNumbers > 14 && showPowerUp == 1 && !killedPowerUp) {
         lifetimeTimer++;
-        if (lifetimeTimer >= 120) { // powerup clears after 2 sec
+        if (lifetimeTimer >= 150) { // powerup clears after 2.5 sec
             showPowerUp = 0;
             killedPowerUp = true;
             lifetimeTimer = 0;
         }
     }
     
-    y += speedY;
-    const int screenWidth = GetScreenWidth();
     const int screenHeight = GetScreenHeight();
     const int mouseX = GetMouseX();
     const int mouseY = GetMouseY();
 
     if (isClaimable(conesetup, *this) && !isClaimed) {
         speedTimeout++;
-        if (showPowerUp == 1) {
-            if (!yReset) {
-                y = 30;
-                yReset = true;
-            }
+        if (!yReset) {
+            y = 30;
+            speedY = 2;
+            yReset = true;
+            speedTimeout = 0;
+        }
+
         if (speedTimeout > 15) {
             speedY += (speedY >= 0 ? 2 : -2); //speed it up every 1/4 second
             speedTimeout = 0;
         }
-            if ((y + radius >= screenHeight) || (y - radius <= 0)) {
-            speedY *= -1;
-            }
-            if (claimInput() && mouseX >= x - radius && mouseX <= x + radius && mouseY >= y - radius && mouseY <= y + radius) {
-                isClaimed = true;
-                showPowerUp = 0;
-                killedPowerUp = true;
-            }
+
+        y += speedY;
+        if (y - heightAndWidth/2 <= 0) {
+            y = heightAndWidth/2;
+            if (speedY < 0) speedY = -speedY;
         }
-        else if (showPowerUp != 1) {
-            yReset = false;
+        else if (y + heightAndWidth/2 >= screenHeight) {
+            y = screenHeight - heightAndWidth/2;
+            if (speedY > 0) speedY = -speedY;
         }
+
+        if (claimInput() && mouseX >= x - heightAndWidth/2 && mouseX <= x + heightAndWidth/2 && mouseY >= y - heightAndWidth/2 && mouseY <= y + heightAndWidth/2) {
+            isClaimed = true;
+            showPowerUp = 0;
+            killedPowerUp = true;
+        }
+    }
+    else {
+        yReset = false;
+        speedTimeout = 0;
     }
 }
 

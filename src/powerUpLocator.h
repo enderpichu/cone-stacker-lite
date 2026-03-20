@@ -26,7 +26,7 @@ class PowerUpLocation {
         int x;
         int y;
         int speedY;
-        int radius;
+        int heightAndWidth;
         bool killedPowerUp;
         bool yReset;
         int updateTimer;

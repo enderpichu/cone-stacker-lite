@@ -35,6 +35,8 @@ bool gameOver = false;
 //returns true when game startsup
 bool mainMenu = true;
 
+bool inPowerUp();
+
 static int highScore = 0;
 static const char* kSaveFileName = "save.json";
 bool newHi = false;
@@ -146,6 +148,8 @@ void init_app() {
 
 bool app_loop() {
     float relDt = GetFrameTime() * 60.0f; // Calculate delta time in relation to 60 frames per second
+
+    // inPowerUp() = CheckCollisionPointRec(GetMousePosition(), );
 
     Texture2D& coneTex = teamColorize ? teamCone : coneTexture;
 
