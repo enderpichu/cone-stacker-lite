@@ -172,7 +172,19 @@ bool app_loop() {
         if (pickedPower != 0) {
             switch (pickedPower) {
                 case 1:
-                    conesetup.coneNumbers += 5; //golden cone, not difficult
+                    for (int i = 0; i < 5; i++) {
+                        if (conesetup.coneNumbers >= MAX_CONES) {
+                            break;
+                        }
+
+                        conestack[conesetup.coneNumbers].position.y = pedestal.GetPedestalPosY() - ((conesetup.coneNumbers % 20) * 8);
+                        conesetup.coneNumbers++;
+
+                        if (conesetup.coneNumbers > highScore) {
+                            highScore = conesetup.coneNumbers;
+                            newHi = true;
+                        }
+                    }
                 break;
                     
                 case 2:
@@ -190,6 +202,13 @@ bool app_loop() {
         StopSound(lose);
         newHi = false;
         gameOver = false;
+    }
+
+    if (IsKeyPressed(KEY_M) && gameOver) {
+        StopSound(lose);
+        newHi = false;
+        gameOver = false;
+        mainMenu = true;
     }
 
     if (IsKeyPressed(KEY_ENTER) && mainMenu) {
@@ -224,6 +243,7 @@ bool app_loop() {
                 else {
                     DrawTexture(coneGameOver, screenWidth/2 - coneGameOver.width/2, screenHeight/2 - coneGameOver.height/2, WHITE);
                     DrawTextCentered("Game Over! ENTER to restart.", screenWidth/2, 20, 20, BLACK);
+                    DrawTextCentered("M to return to main menu.", screenWidth/2, 50, 20, BLACK);
                     if (newHi) {
                         DrawTextCentered("NEW HIGH!", screenWidth/2, 425, 40, BLACK);
                     }
