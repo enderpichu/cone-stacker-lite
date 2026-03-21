@@ -156,7 +156,8 @@ bool app_loop() {
     //
     UpdateMusicStream(background);
     cone.Update(conesetup);
-    conesetup.Update(cone, pedestal, screenWidth, stack, firstStack, lose, coneTex, highScore, gameOver, mainMenu, newHi);
+    bool blockMouseStack = powerUps.IsMouseInBounds(conesetup);
+    conesetup.Update(cone, pedestal, screenWidth, stack, firstStack, lose, coneTex, highScore, gameOver, mainMenu, newHi, blockMouseStack);
     if (slowDown) {
         cone.slowDownPUp(); // tick timer & apply half speed
         if (!cone.slowApplied) slowDown = false; // timer expired
@@ -183,8 +184,6 @@ bool app_loop() {
                 break;
             }
         }
-    powerUps.Draw(gimmighoul, timeLord, teamColor);
-
     int newStack = (conesetup.coneNumbers / 20) * 20;
 
     if (IsKeyPressed(KEY_ENTER) && gameOver) {
@@ -218,6 +217,7 @@ bool app_loop() {
                 }
             }
                     DrawTexture(coneTex, cone.GetConeX(), cone.GetConeY(), WHITE);
+                    powerUps.Draw(gimmighoul, timeLord, teamColor, gameOver, mainMenu);
                     pedestal.Draw();
                     DrawTextCentered(TextFormat("%i", conesetup.coneNumbers), screenWidth/2, 10, 20, BLACK);
                 }

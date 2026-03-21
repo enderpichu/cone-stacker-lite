@@ -23,33 +23,46 @@ PowerUpLocation::PowerUpLocation()
 , lifetimeTimer(0)
 , speedTimeout(0)
 , powerUpTester(3)
+, minConesForPowerUp(3)
 {}
 
-bool isClaimable(ConeNumberSetup& conesetup, PowerUpLocation& powerUp) {
-    if (conesetup.coneNumbers > 14 && powerUp.showPowerUp == 1) {
+bool isClaimable(const ConeNumberSetup& conesetup, const PowerUpLocation& powerUp) {
+    if (conesetup.coneNumbers > powerUp.minConesForPowerUp && powerUp.showPowerUp == 1) {
         return true;
     }
     return false;
 }
 
-void PowerUpLocation::Draw(Texture2D& texture1, Texture2D& texture2, Texture2D& texture3) const {
-    if (powerUpPicker != 0) {
-        switch (powerUpPicker) {
-            case 1:
-                DrawTexture(texture1, x + texture1.width/2, y, WHITE);
-            break;
-            case 2:
-                DrawTexture(texture2, x + texture2.width/2, y, WHITE);
-            break;
-            case 3:
-                DrawTexture(texture3, x + texture3.width/2, y, WHITE);
-            break;
+void PowerUpLocation::Draw(Texture2D& texture1, Texture2D& texture2, Texture2D& texture3, bool stateOne, bool stateTwo) const{
+    if (!stateOne && !stateTwo && showPowerUp == 1 && !isClaimed) {
+        if (powerUpPicker != 0) {
+            switch (powerUpPicker) {
+                case 1:
+                    DrawTexture(texture1, x - texture1.width/2, y - texture1.height/2, WHITE);
+                break;
+                case 2:
+                    DrawTexture(texture2, x - texture2.width/2, y - texture2.height/2, WHITE);
+                break;
+                case 3:
+                    DrawTexture(texture3, x - texture3.width/2, y - texture3.height/2, WHITE);
+                break;
+            }
         }
     }
 }
 
+bool PowerUpLocation::IsMouseInBounds(const ConeNumberSetup& conesetup) const {
+    if (!isClaimable(conesetup, *this) || isClaimed) {
+        return false;
+    }
+
+    const int mouseX = GetMouseX();
+    const int mouseY = GetMouseY();
+    return mouseX >= x - heightAndWidth/2 && mouseX <= x + heightAndWidth/2 && mouseY >= y - heightAndWidth/2 && mouseY <= y + heightAndWidth/2;
+}
+
 void PowerUpLocation::Update(ConeNumberSetup& conesetup) {
-    if (conesetup.coneNumbers > 3) {
+    if (conesetup.coneNumbers > minConesForPowerUp) {
         updateTimer++;
         if (updateTimer >= 60) { // chance of powerup every ~1 sec
             randomizer = GetRandomValue(16, 66);
@@ -62,7 +75,17 @@ void PowerUpLocation::Update(ConeNumberSetup& conesetup) {
                 isClaimed = false;
                 powerUpPicker = GetRandomValue(1, 3); // selects power up type randomly between three options
             }
+            else {
+                powerUpPicker = 0;
+            }
         }
+    }
+    else {
+        showPowerUp = 0;
+        powerUpPicker = 0;
+        killedPowerUp = false;
+        lifetimeTimer = 0;
+        updateTimer = 0;
     }
     // std::cout << showPowerUp << std::endl;
     // if (showPowerUp == 1) {
@@ -73,6 +96,7 @@ void PowerUpLocation::Update(ConeNumberSetup& conesetup) {
         lifetimeTimer++;
         if (lifetimeTimer >= 150) { // powerup clears after 2.5 sec
             showPowerUp = 0;
+            powerUpPicker = 0;
             killedPowerUp = true;
             lifetimeTimer = 0;
         }
@@ -132,8 +156,10 @@ void PowerUpLocation::PickPowerUp() const {
 
 int PowerUpLocation::EatPowerUp() {
     if (isClaimed) {
+        const int claimedPowerUp = powerUpPicker;
         isClaimed = false;
-        return powerUpPicker;
+        powerUpPicker = 0;
+        return claimedPowerUp;
     }
     return 0;
 }

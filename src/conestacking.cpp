@@ -15,8 +15,10 @@ ConeNumberSetup::ConeNumberSetup()
 , coneLevelUpSpeed(0)
 {}
 
-void ConeNumberSetup::Update(Cone& cone, Pedestal& pedestal, int screenWidth, Sound& stackSfx, Sound& firstSfx, Sound& loseSfx, Texture2D& coneTex, int& highScore, bool& gameOver, bool& mainMenu, bool& newHi) {
-     if ((IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) && !gameOver && !mainMenu) {
+void ConeNumberSetup::Update(Cone& cone, Pedestal& pedestal, int screenWidth, Sound& stackSfx, Sound& firstSfx, Sound& loseSfx, Texture2D& coneTex, int& highScore, bool& gameOver, bool& mainMenu, bool& newHi, bool blockMouseStack) {
+    const bool keyPressed = IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W);
+    const bool mousePressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !blockMouseStack;
+    if ((keyPressed || mousePressed) && !gameOver && !mainMenu) {
         if (cone.GetConeX() > (screenWidth/2 - coneTex.width - 10) && cone.GetConeX() < (screenWidth/2 + coneTex.width + 10)) {
         for (int i = 0; i < 1; i++) {
             if (coneNumbers < MAX_CONES) {

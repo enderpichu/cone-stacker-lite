@@ -18,7 +18,7 @@ class ConeNumberSetup {
             int coneNumbers;
             int coneLevelUpSpeed;
             static int prevClear;
-            void Update(Cone& cone, Pedestal& pedestal, int screenWidth, Sound& stackSfx, Sound& firstSfx, Sound& loseSfx, Texture2D& coneTex, int& highScore, bool& gameOver, bool& mainMenu, bool& newHi);
+            void Update(Cone& cone, Pedestal& pedestal, int screenWidth, Sound& stackSfx, Sound& firstSfx, Sound& loseSfx, Texture2D& coneTex, int& highScore, bool& gameOver, bool& mainMenu, bool& newHi, bool blockMouseStack);
             void DrawStack(Texture2D& coneTex, int screenWidth);
             void Reset();
 };
