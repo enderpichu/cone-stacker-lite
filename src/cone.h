@@ -23,8 +23,8 @@ class Cone {
         int speedY;
         int height;
         int width;
-        float slowDownTimer;
-        float teamColorizeTimer;
-        float speedMultiplier;
+        double slowDownTimer;
+        double teamColorizeTimer;
+        double speedMultiplier;
         bool resetApplied;
 };

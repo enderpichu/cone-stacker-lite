@@ -238,6 +238,7 @@ bool app_loop() {
                     DrawTexture(coneTex, cone.GetConeX(), cone.GetConeY(), WHITE);
                     powerUps.Draw(gimmighoul, timeLord, teamColor, gameOver, mainMenu);
                     pedestal.Draw();
+                    DrawRectangleLines(powerUps.GetPowerUpX() - teamColor.height /2, powerUps.GetPowerUpY() - teamColor.height / 2, teamColor.width, teamColor.height, RED);
                     DrawTextCentered(TextFormat("%i", conesetup.coneNumbers), screenWidth/2, 10, 20, BLACK);
                 }
                 else {

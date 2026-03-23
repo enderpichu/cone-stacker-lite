@@ -38,13 +38,13 @@ void PowerUpLocation::Draw(Texture2D& texture1, Texture2D& texture2, Texture2D& 
         if (powerUpPicker != 0) {
             switch (powerUpPicker) {
                 case 1:
-                    DrawTexture(texture1, x - texture1.width/2, y - texture1.height/2, WHITE);
+                    DrawTexture(texture1, x - texture1.width /2, y - texture1.height /2, WHITE);
                 break;
                 case 2:
-                    DrawTexture(texture2, x - texture2.width/2, y - texture2.height/2, WHITE);
+                    DrawTexture(texture2, x - texture2.width /2, y - texture2.height /2, WHITE);
                 break;
                 case 3:
-                    DrawTexture(texture3, x - texture3.width/2, y - texture3.height/2, WHITE);
+                    DrawTexture(texture3, x - texture3.width /2, y - texture3.height /2, WHITE);
                 break;
             }
         }
@@ -170,4 +170,12 @@ int PowerUpLocation::TestPowerUp() {
         return powerUpTester;
     }
     return 0;
+}
+
+int PowerUpLocation::GetPowerUpX() const {
+    return x;
+}
+
+int PowerUpLocation::GetPowerUpY() const {
+    return y;
 }
