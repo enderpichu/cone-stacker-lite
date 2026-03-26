@@ -204,7 +204,7 @@ bool app_loop() {
         gameOver = false;
     }
 
-    if (IsKeyPressed(KEY_M) && gameOver) {
+    if (IsKeyPressed(KEY_P) && gameOver) {
         StopSound(lose);
         newHi = false;
         gameOver = false;
@@ -215,9 +215,9 @@ bool app_loop() {
         mainMenu = false;
     }
 
-    if(conesetup.coneNumbers % 20 == 0 && conesetup.coneNumbers > ConeNumberSetup::prevClear) {
+    if(conesetup.coneNumbers % 20 == 0 && conesetup.coneNumbers > conesetup.prevClear) {
     memset(conestack, 0, sizeof(conestack));
-    ConeNumberSetup::prevClear = conesetup.coneNumbers;
+    conesetup.prevClear = conesetup.coneNumbers;
     }
 
     int coneScores = conesetup.coneNumbers;
@@ -238,13 +238,13 @@ bool app_loop() {
                     DrawTexture(coneTex, cone.GetConeX(), cone.GetConeY(), WHITE);
                     powerUps.Draw(gimmighoul, timeLord, teamColor, gameOver, mainMenu);
                     pedestal.Draw();
-                    DrawRectangleLines(powerUps.GetPowerUpX() - teamColor.height /2, powerUps.GetPowerUpY() - teamColor.height / 2, teamColor.width, teamColor.height, RED);
+                    // DrawRectangleLines(powerUps.GetPowerUpX() - teamColor.height /2, powerUps.GetPowerUpY() - teamColor.height / 2, teamColor.width, teamColor.height, RED);
                     DrawTextCentered(TextFormat("%i", conesetup.coneNumbers), screenWidth/2, 10, 20, BLACK);
                 }
                 else {
                     DrawTexture(coneGameOver, screenWidth/2 - coneGameOver.width/2, screenHeight/2 - coneGameOver.height/2, WHITE);
                     DrawTextCentered("Game Over! ENTER to restart.", screenWidth/2, 20, 20, BLACK);
-                    DrawTextCentered("M to return to main menu.", screenWidth/2, 50, 20, BLACK);
+                    DrawTextCentered("P to return to main menu.", screenWidth/2, 50, 20, BLACK);
                     if (newHi) {
                         DrawTextCentered("NEW HIGH!", screenWidth/2, 425, 40, BLACK);
                     }

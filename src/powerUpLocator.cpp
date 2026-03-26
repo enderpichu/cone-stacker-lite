@@ -21,6 +21,7 @@ PowerUpLocation::PowerUpLocation()
 , yReset(false)
 , updateTimer(0)
 , lifetimeTimer(0)
+, lifetime(250)
 , speedTimeout(0)
 , powerUpTester(3)
 , minConesForPowerUp(3)
@@ -39,14 +40,18 @@ void PowerUpLocation::Draw(Texture2D& texture1, Texture2D& texture2, Texture2D& 
             switch (powerUpPicker) {
                 case 1:
                     DrawTexture(texture1, x - texture1.width /2, y - texture1.height /2, WHITE);
+                    DrawRectangleLines(x - texture1.width /2, y - texture1.height / 2, texture1.width, texture1.height, RED);
                 break;
                 case 2:
                     DrawTexture(texture2, x - texture2.width /2, y - texture2.height /2, WHITE);
+                    DrawRectangleLines(x - texture2.width /2, y - texture2.height / 2, texture2.width, texture2.height, RED);
                 break;
                 case 3:
                     DrawTexture(texture3, x - texture3.width /2, y - texture3.height /2, WHITE);
+                    DrawRectangleLines(x - texture3.width /2, y - texture3.height / 2, texture3.width, texture3.height, RED);
                 break;
             }
+            DrawText(TextFormat("%02.02f", (lifetimeTimer / 60.0f)), x - texture1.width / 2, y - texture1.height, 20, RED);
         }
     }
 }
@@ -62,46 +67,44 @@ bool PowerUpLocation::IsMouseInBounds(const ConeNumberSetup& conesetup) const {
 }
 //TODO: change behaviors- make golden cone easier to get and very low chance (~5%), time slowing harder and a lower chance (~35%), and team colorize the most common. keep durations
 void PowerUpLocation::Update(ConeNumberSetup& conesetup) {
-    if (conesetup.coneNumbers > minConesForPowerUp) {
-        updateTimer++;
-        if (updateTimer >= 60) { // chance of powerup every ~1 sec
-            randomizer = GetRandomValue(16, 66);
-            showPowerUp = GetRandomValue(0, 3) == 0 ? 1 : 0;
-            x = randomizer;
-            killedPowerUp = false;
-            updateTimer = 0;
-            if (showPowerUp == 1) {
-                lifetimeTimer = 0;
-                isClaimed = false;
-                powerUpPicker = GetRandomValue(1, 3); // selects power up type randomly between three options
-            }
-            else {
-                powerUpPicker = 0;
-            }
-        }
-    }
-    else {
+    if (conesetup.coneNumbers <= minConesForPowerUp) {
         showPowerUp = 0;
         powerUpPicker = 0;
+        isClaimed = false;
         killedPowerUp = false;
-        lifetimeTimer = 0;
+        lifetimeTimer = lifetime;
         updateTimer = 0;
     }
-    // std::cout << showPowerUp << std::endl;
-    // if (showPowerUp == 1) {
-    // std::cout << powerUpPicker << std::endl;
-    // }
-
-    if (conesetup.coneNumbers > 14 && showPowerUp == 1 && !killedPowerUp) {
-        lifetimeTimer++;
-        if (lifetimeTimer >= 150) { // powerup clears after 2.5 sec
+    else if (showPowerUp == 1 && !isClaimed && !killedPowerUp) {
+        lifetimeTimer--;
+        if (lifetimeTimer <= 0) { // powerup clears after lifetime expires
             showPowerUp = 0;
             powerUpPicker = 0;
             killedPowerUp = true;
-            lifetimeTimer = 0;
+            lifetimeTimer = lifetime;
         }
     }
-    
+    else {
+        updateTimer++;
+        if (updateTimer >= 60) { // chance of powerup every ~1 sec
+            updateTimer = 0;
+            if (GetRandomValue(0, 3) == 0) {
+                randomizer = GetRandomValue(32, 120);
+                x = randomizer;
+                showPowerUp = 1;
+                killedPowerUp = false;
+                isClaimed = false;
+                lifetimeTimer = lifetime;
+                powerUpPicker = GetRandomValue(1, 3); // selects power up type randomly between three options
+            }
+            else {
+                showPowerUp = 0;
+                powerUpPicker = 0;
+                killedPowerUp = false;
+            }
+        }
+    }
+
     const int screenHeight = GetScreenHeight();
     const int mouseX = GetMouseX();
     const int mouseY = GetMouseY();
@@ -116,7 +119,8 @@ void PowerUpLocation::Update(ConeNumberSetup& conesetup) {
         }
 
         if (speedTimeout > 15) {
-            speedY += (speedY >= 0 ? 2 : -2); //speed it up every 1/4 second
+            //old logic speedY += (speedY >= 0 ? 2 : -2); //speed it up every 1/4 second
+            speedY *= 1.25;
             speedTimeout = 0;
         }
 

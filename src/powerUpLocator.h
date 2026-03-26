@@ -34,5 +34,6 @@ class PowerUpLocation {
         bool yReset;
         int updateTimer;
         int lifetimeTimer;
+        int lifetime;
         int speedTimeout;
 };
