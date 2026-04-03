@@ -10,8 +10,8 @@ int ConeNumberSetup::prevClear = 0;
 extern ConeStack conestack[MAX_CONES];
 
 ConeNumberSetup::ConeNumberSetup() 
-: coneNumbers(0)
-, lastCone(0)
+: conesAmount(0)
+, previousCone(0)
 , coneLevelUpSpeed(0)
 {}
 
@@ -21,17 +21,17 @@ void ConeNumberSetup::Update(Cone& cone, Pedestal& pedestal, int screenWidth, So
     if ((keyPressed || mousePressed) && !gameOver && !mainMenu) {
         if (cone.GetConeX() > (screenWidth/2 - coneTex.width - 10) && cone.GetConeX() < (screenWidth/2 + coneTex.width + 10)) {
         for (int i = 0; i < 1; i++) {
-            if (coneNumbers < MAX_CONES) {
-            conestack[coneNumbers].position.y = pedestal.GetPedestalPosY() - ((coneNumbers % 20) * 8);
-                    coneNumbers ++;
-                    if (coneNumbers % 20 == 1) {
+            if (conesAmount < MAX_CONES) {
+            conestack[conesAmount].position.y = pedestal.GetPedestalPosY() - ((conesAmount % 20) * 8);
+                    conesAmount ++;
+                    if (conesAmount % 20 == 1) {
                         PlaySound(firstSfx);
                     }
                     else {
                         PlaySound(stackSfx);
                     }
-                    if (coneNumbers > highScore) {
-                        highScore = coneNumbers;
+                    if (conesAmount > highScore) {
+                        highScore = conesAmount;
                         newHi = true;
                     }
                 }
@@ -39,7 +39,7 @@ void ConeNumberSetup::Update(Cone& cone, Pedestal& pedestal, int screenWidth, So
         }
         else {
             PlaySound(loseSfx);
-            coneNumbers = 0;
+            conesAmount = 0;
             prevClear = 0;
             gameOver = true;
         }

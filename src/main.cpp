@@ -173,15 +173,15 @@ bool app_loop() {
             switch (pickedPower) {
                 case 1:
                     for (int i = 0; i < 5; i++) {
-                        if (conesetup.coneNumbers >= MAX_CONES) {
+                        if (conesetup.conesAmount >= MAX_CONES) {
                             break;
                         }
 
-                        conestack[conesetup.coneNumbers].position.y = pedestal.GetPedestalPosY() - ((conesetup.coneNumbers % 20) * 8);
-                        conesetup.coneNumbers++;
+                        conestack[conesetup.conesAmount].position.y = pedestal.GetPedestalPosY() - ((conesetup.conesAmount % 20) * 8);
+                        conesetup.conesAmount++;
 
-                        if (conesetup.coneNumbers > highScore) {
-                            highScore = conesetup.coneNumbers;
+                        if (conesetup.conesAmount > highScore) {
+                            highScore = conesetup.conesAmount;
                             newHi = true;
                         }
                     }
@@ -196,7 +196,7 @@ bool app_loop() {
                 break;
             }
         }
-    int newStack = (conesetup.coneNumbers / 20) * 20;
+    int newStack = (conesetup.conesAmount / 20) * 20;
 
     if (IsKeyPressed(KEY_ENTER) && gameOver) {
         StopSound(lose);
@@ -215,12 +215,12 @@ bool app_loop() {
         mainMenu = false;
     }
 
-    if(conesetup.coneNumbers % 20 == 0 && conesetup.coneNumbers > conesetup.prevClear) {
+    if(conesetup.conesAmount % 20 == 0 && conesetup.conesAmount > conesetup.prevClear) {
     memset(conestack, 0, sizeof(conestack));
-    conesetup.prevClear = conesetup.coneNumbers;
+    conesetup.prevClear = conesetup.conesAmount;
     }
 
-    int coneScores = conesetup.coneNumbers;
+    int coneScores = conesetup.conesAmount;
     BeginDrawing();
         ClearBackground(LIGHTGRAY);
         if (mainMenu)
@@ -230,8 +230,8 @@ bool app_loop() {
         }
 
         else if (!gameOver && !mainMenu) {
-            for (int i = newStack; i < conesetup.coneNumbers; i++) {
-                if (conesetup.coneNumbers > 0) {
+            for (int i = newStack; i < conesetup.conesAmount; i++) {
+                if (conesetup.conesAmount > 0) {
                     DrawTexture(coneTex, screenWidth/2 - 16, (int)conestack[i].position.y, WHITE);
                 }
             }
@@ -239,7 +239,7 @@ bool app_loop() {
                     powerUps.Draw(gimmighoul, timeLord, teamColor, gameOver, mainMenu);
                     pedestal.Draw();
                     // DrawRectangleLines(powerUps.GetPowerUpX() - teamColor.height /2, powerUps.GetPowerUpY() - teamColor.height / 2, teamColor.width, teamColor.height, RED);
-                    DrawTextCentered(TextFormat("%i", conesetup.coneNumbers), screenWidth/2, 10, 20, BLACK);
+                    DrawTextCentered(TextFormat("%i", conesetup.conesAmount), screenWidth/2, 10, 20, BLACK);
                 }
                 else {
                     DrawTexture(coneGameOver, screenWidth/2 - coneGameOver.width/2, screenHeight/2 - coneGameOver.height/2, WHITE);
@@ -253,6 +253,12 @@ bool app_loop() {
 
         if (highScore != 0) {
         DrawText(TextFormat("HI: %i", highScore), screenWidth - 100, 30, 20, BLACK);
+        }
+        if (cone.GetSlowTimer() > 0.0) {
+        DrawTextCentered(TextFormat("%02.02f", cone.GetSlowTimer()), screenWidth /2, 30, 20 , RED);
+        }
+        if (cone.GetTeamTimer() > 0.0) {
+         DrawTextCentered(TextFormat("%02.02f", cone.GetTeamTimer()), screenWidth /2, 50, 20, RED);   
         }
     EndDrawing();
     

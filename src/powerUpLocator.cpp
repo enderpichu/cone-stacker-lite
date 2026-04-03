@@ -28,7 +28,7 @@ PowerUpLocation::PowerUpLocation()
 {}
 
 bool isClaimable(const ConeNumberSetup& conesetup, const PowerUpLocation& powerUp) {
-    if (conesetup.coneNumbers > powerUp.minConesForPowerUp && powerUp.showPowerUp == 1) {
+    if (conesetup.conesAmount > powerUp.minConesForPowerUp && powerUp.showPowerUp == 1) {
         return true;
     }
     return false;
@@ -67,7 +67,7 @@ bool PowerUpLocation::IsMouseInBounds(const ConeNumberSetup& conesetup) const {
 }
 //TODO: change behaviors- make golden cone easier to get and very low chance (~5%), time slowing harder and a lower chance (~35%), and team colorize the most common. keep durations
 void PowerUpLocation::Update(ConeNumberSetup& conesetup) {
-    if (conesetup.coneNumbers <= minConesForPowerUp) {
+    if (conesetup.conesAmount <= minConesForPowerUp) {
         showPowerUp = 0;
         powerUpPicker = 0;
         isClaimed = false;
