@@ -35,6 +35,9 @@ bool gameOver = false;
 //returns true when game startsup
 bool mainMenu = true;
 
+// returns true during settings
+bool settings = false;
+
 bool inPowerUp();
 
 static int highScore = 0;
@@ -59,6 +62,8 @@ Sound lose;
 Sound stack;
 Sound firstStack;
 Music background;
+
+Color TRUVIGREEN = {89, 170, 89, 255};
 
 ConeNumberSetup conesetup;
 Cone cone;
@@ -153,6 +158,7 @@ bool app_loop() {
 
     Texture2D& coneTex = teamColorize ? teamCone : coneTexture;
 
+    
     //
     UpdateMusicStream(background);
     cone.Update(conesetup);
@@ -258,7 +264,7 @@ bool app_loop() {
         DrawTextCentered(TextFormat("%02.02f", cone.GetSlowTimer()), screenWidth /2, 30, 20 , RED);
         }
         if (cone.GetTeamTimer() > 0.0) {
-         DrawTextCentered(TextFormat("%02.02f", cone.GetTeamTimer()), screenWidth /2, 50, 20, RED);   
+         DrawTextCentered(TextFormat("%02.02f", cone.GetTeamTimer()), screenWidth /2, 50, 20, TRUVIGREEN);   
         }
     EndDrawing();
     

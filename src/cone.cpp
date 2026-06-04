@@ -26,6 +26,8 @@ Cone::Cone()
 void Cone::Update(ConeNumberSetup& coneSetup) {
     //setting speedX to change X
     x += static_cast<int>(speedX * speedMultiplier);
+
+    Clamp(x, minX, maxX);
     //getting screen width and making it easier to type
     const int screenWidth = GetScreenWidth();
     const int screenHeight = GetScreenHeight();
@@ -50,7 +52,7 @@ void Cone::Update(ConeNumberSetup& coneSetup) {
         resetApplied = false;
     }
 
-    if ((x + width >= screenWidth - 225) || (x <= 225)) {
+    if ((x + width >= screenWidth - (minX + 5)) || (x <= (minX + 5))) {
         speedX *= -1;
     }
 

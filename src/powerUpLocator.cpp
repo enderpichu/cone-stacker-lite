@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "raylib.h"
+#include "raymath.h"
 
 bool claimInput() {
     return IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
@@ -40,18 +41,18 @@ void PowerUpLocation::Draw(Texture2D& texture1, Texture2D& texture2, Texture2D& 
             switch (powerUpPicker) {
                 case 1:
                     DrawTexture(texture1, x - texture1.width /2, y - texture1.height /2, WHITE);
-                    DrawRectangleLines(x - texture1.width /2, y - texture1.height / 2, texture1.width, texture1.height, RED);
+                    // DrawRectangleLines(x - texture1.width /2, y - texture1.height / 2, texture1.width, texture1.height, RED);
                 break;
                 case 2:
                     DrawTexture(texture2, x - texture2.width /2, y - texture2.height /2, WHITE);
-                    DrawRectangleLines(x - texture2.width /2, y - texture2.height / 2, texture2.width, texture2.height, RED);
+                    // DrawRectangleLines(x - texture2.width /2, y - texture2.height / 2, texture2.width, texture2.height, RED);
                 break;
                 case 3:
                     DrawTexture(texture3, x - texture3.width /2, y - texture3.height /2, WHITE);
-                    DrawRectangleLines(x - texture3.width /2, y - texture3.height / 2, texture3.width, texture3.height, RED);
+                    // DrawRectangleLines(x - texture3.width /2, y - texture3.height / 2, texture3.width, texture3.height, RED);
                 break;
             }
-            DrawText(TextFormat("%02.02f", (lifetimeTimer / 60.0f)), x - texture1.width / 2, y - texture1.height, 20, RED);
+            // DrawText(TextFormat("%02.02f", (lifetimeTimer / 60.0f)), x - texture1.width / 2, y - texture1.height, 20, RED);
         }
     }
 }
@@ -120,11 +121,11 @@ void PowerUpLocation::Update(ConeNumberSetup& conesetup) {
 
         if (speedTimeout > 15) {
             //old logic speedY += (speedY >= 0 ? 2 : -2); //speed it up every 1/4 second
-            speedY *= 1.25;
+            speedY *= 1.40;
             speedTimeout = 0;
         }
 
-        y += speedY;
+        y += static_cast<int>(speedY);
         if (y - heightAndWidth/2 <= 0) {
             y = heightAndWidth/2;
             if (speedY < 0) speedY = -speedY;
