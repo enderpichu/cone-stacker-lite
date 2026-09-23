@@ -125,7 +125,7 @@ void PowerUpLocation::Update(ConeNumberSetup& conesetup, float deltaTime) {
             speedTimeout = 0;
         }
 
-        y += static_cast<int>(speedY * deltaTime);
+        y += (speedY * deltaTime);
         if (y - heightAndWidth/2 <= 0) {
             y = heightAndWidth/2;
             if (speedY < 0) speedY = -speedY;
