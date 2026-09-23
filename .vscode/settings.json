@@ -59,7 +59,8 @@
         "iomanip": "cpp",
         "iostream": "cpp",
         "istream": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "format": "cpp"
     },
     "C_Cpp.default.compilerPath": "C:/raylib/w64devkit/bin/gcc.exe"
 }

@@ -161,7 +161,7 @@ bool app_loop() {
     
     //
     UpdateMusicStream(background);
-    cone.Update(conesetup, screenWidth);
+    cone.Update(conesetup, screenWidth, relDt);
     bool blockMouseStack = powerUps.IsMouseInBounds(conesetup);
     conesetup.Update(cone, pedestal, screenWidth, stack, firstStack, lose, coneTex, highScore, gameOver, mainMenu, newHi, blockMouseStack);
     if (slowDown) {
@@ -172,7 +172,7 @@ bool app_loop() {
         cone.TeamColorizePUp();
         if (!cone.IsPeak) teamColorize = false; //same as above
     }
-    powerUps.Update(conesetup);
+    powerUps.Update(conesetup, relDt);
     
     int pickedPower = powerUps.EatPowerUp();
         if (pickedPower != 0) {

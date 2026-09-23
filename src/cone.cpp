@@ -23,9 +23,9 @@ Cone::Cone()
 
   
 
-void Cone::Update(ConeNumberSetup& coneSetup, int screenWidth) {
+void Cone::Update(ConeNumberSetup& coneSetup, int screenWidth, float deltaTime) {
     //setting speedX to change X
-    x += static_cast<int>(speedX * speedMultiplier);
+    x += static_cast<int>((speedX * speedMultiplier) * deltaTime);
 
     Clamp(x, minX, maxX);
     //getting screen width and making it easier to type

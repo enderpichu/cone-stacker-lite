@@ -67,7 +67,7 @@ bool PowerUpLocation::IsMouseInBounds(const ConeNumberSetup& conesetup) const {
     return mouseX >= x - heightAndWidth/2 && mouseX <= x + heightAndWidth/2 && mouseY >= y - heightAndWidth/2 && mouseY <= y + heightAndWidth/2;
 }
 //TODO: change behaviors- make golden cone easier to get and very low chance (~5%), time slowing harder and a lower chance (~35%), and team colorize the most common. keep durations
-void PowerUpLocation::Update(ConeNumberSetup& conesetup) {
+void PowerUpLocation::Update(ConeNumberSetup& conesetup, float deltaTime) {
     if (conesetup.conesAmount <= minConesForPowerUp) {
         showPowerUp = 0;
         powerUpPicker = 0;
@@ -125,7 +125,7 @@ void PowerUpLocation::Update(ConeNumberSetup& conesetup) {
             speedTimeout = 0;
         }
 
-        y += static_cast<int>(speedY);
+        y += static_cast<int>(speedY * deltaTime);
         if (y - heightAndWidth/2 <= 0) {
             y = heightAndWidth/2;
             if (speedY < 0) speedY = -speedY;
