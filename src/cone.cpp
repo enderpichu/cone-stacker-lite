@@ -51,7 +51,7 @@ void Cone::Update(ConeNumberSetup& coneSetup, int screenWidth) {
         resetApplied = false;
     }
 
-    if ((x + width >= screenWidth - (minX + 5)) || (x <= (minX + 5))) {
+    if (((x + width) >= screenWidth - (minX + 5)) || (x <= (minX + 5))) {
         speedX *= -1;
     }
 

@@ -21,7 +21,10 @@ int main(void)
 {
     // Setup window
 #if defined(PLATFORM_WEB)
+    SetConfigFlags(FLAG_WINDOW_HIGHDPI);
     InitWindow(getBrowserWindowWidth(), getBrowserWindowHeight(), PROJECT_NAME);
+    Vector2 scale = GetWindowScaleDPI();
+    SetWindowSize((int)(getBrowserWindowHeight() * scale.x), (int)(getBrowserWindowHeight() * scale.y));
 #else
     SetConfigFlags(FLAG_WINDOW_HIGHDPI);
     InitWindow(720, 480, "ConeStackerLite");
