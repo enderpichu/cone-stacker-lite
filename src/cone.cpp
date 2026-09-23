@@ -23,13 +23,12 @@ Cone::Cone()
 
   
 
-void Cone::Update(ConeNumberSetup& coneSetup) {
+void Cone::Update(ConeNumberSetup& coneSetup, int screenWidth) {
     //setting speedX to change X
     x += static_cast<int>(speedX * speedMultiplier);
 
     Clamp(x, minX, maxX);
     //getting screen width and making it easier to type
-    const int screenWidth = GetScreenWidth();
     const int screenHeight = GetScreenHeight();
     //cone bounces from sides of the screen
     if (coneSetup.conesAmount / 7 > coneSetup.previousCone) {

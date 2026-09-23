@@ -161,7 +161,7 @@ bool app_loop() {
     
     //
     UpdateMusicStream(background);
-    cone.Update(conesetup);
+    cone.Update(conesetup, screenWidth);
     bool blockMouseStack = powerUps.IsMouseInBounds(conesetup);
     conesetup.Update(cone, pedestal, screenWidth, stack, firstStack, lose, coneTex, highScore, gameOver, mainMenu, newHi, blockMouseStack);
     if (slowDown) {
@@ -243,7 +243,7 @@ bool app_loop() {
             }
                     DrawTexture(coneTex, cone.GetConeX(), cone.GetConeY(), WHITE);
                     powerUps.Draw(gimmighoul, timeLord, teamColor, gameOver, mainMenu);
-                    pedestal.Draw();
+                    pedestal.Draw(screenWidth);
                     // DrawRectangleLines(powerUps.GetPowerUpX() - teamColor.height /2, powerUps.GetPowerUpY() - teamColor.height / 2, teamColor.width, teamColor.height, RED);
                     DrawTextCentered(TextFormat("%i", conesetup.conesAmount), screenWidth/2, 10, 20, BLACK);
                 }

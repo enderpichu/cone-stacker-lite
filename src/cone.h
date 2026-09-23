@@ -6,7 +6,7 @@
 class Cone {
     public:
         Cone();
-        void Update(ConeNumberSetup& coneSetup);
+        void Update(ConeNumberSetup& coneSetup, int screenWidth);
         void Draw() const;
         int GetConeX() const;
         int GetConeY() const;

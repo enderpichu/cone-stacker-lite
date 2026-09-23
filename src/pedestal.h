@@ -5,7 +5,7 @@
 class Pedestal {
         public:
             Pedestal();
-            void Draw() const;
+            void Draw(int screenWidth) const;
             int GetPedestalPosY() const;
         private:
             int x;
