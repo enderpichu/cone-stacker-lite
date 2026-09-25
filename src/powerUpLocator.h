@@ -12,6 +12,7 @@ class PowerUpLocation {
         void Draw(Texture2D& texture1, Texture2D& texture2, Texture2D& texture3, bool stateOne, bool stateTwo) const;
         bool IsMouseInBounds(const ConeNumberSetup& conesetup) const;
         void PickPowerUp() const;
+        void KillPowerUp();
         int GetPowerUpY() const;
         int GetPowerUpX() const;
         int showPowerUp;

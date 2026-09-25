@@ -10,6 +10,7 @@ class Pedestal {
         private:
             int x;
             int y;
+            mutable Vector2 pedestalPos;
             int height;
             int width;
 

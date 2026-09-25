@@ -181,6 +181,15 @@ int PowerUpLocation::GetPowerUpX() const {
     return x;
 }
 
+void PowerUpLocation::KillPowerUp() {
+    showPowerUp = 0;
+    powerUpPicker = 0;
+    isClaimed = false;
+    killedPowerUp = true;
+    lifetimeTimer = 0;
+    updateTimer = 0;
+}
+
 int PowerUpLocation::GetPowerUpY() const {
     return y;
 }

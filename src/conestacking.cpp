@@ -23,9 +23,9 @@ void ConeNumberSetup::Update(Cone& cone, Pedestal& pedestal, int screenWidth, So
         if (cone.GetConeX() > (screenWidth/2 - coneTex.width - 10) && cone.GetConeX() < (screenWidth/2 + coneTex.width + 10)) {
         for (int i = 0; i < 1; i++) {
             if (conesAmount < MAX_CONES) {
-            conestack[conesAmount].position.y = pedestal.GetPedestalPosY() - ((conesAmount % 20) * 8);
+            conestack[conesAmount].position.y = pedestal.GetPedestalPosY() - ((conesAmount % 10) * 8);
                     conesAmount ++;
-                    if (conesAmount % 20 == 1) {
+                    if (conesAmount % 10 == 1) {
                         PlaySound(firstSfx);
                     }
                     else {

@@ -24,10 +24,13 @@ Cone::Cone()
   
 
 void Cone::Update(ConeNumberSetup& coneSetup, int screenWidth, float deltaTime) {
-    //setting speedX to change X
-    x += static_cast<int>((speedX * speedMultiplier) * deltaTime);
+    if (((x + width) >= screenWidth - (minX + 5)) || (x <= (minX + 5))) {
+        speedX *= -1;
+    }
 
+    //setting speedX to change X
     Clamp(x, minX, maxX);
+    x += static_cast<int>((speedX * speedMultiplier) * deltaTime);
     //getting screen width and making it easier to type
     const int screenHeight = GetScreenHeight();
     //cone bounces from sides of the screen
@@ -36,9 +39,9 @@ void Cone::Update(ConeNumberSetup& coneSetup, int screenWidth, float deltaTime) 
         coneSetup.previousCone = coneSetup.conesAmount / 7;
     }
 
-    if (coneSetup.conesAmount / 20 > coneSetup.coneLevelUpSpeed) {
+    if (coneSetup.conesAmount / 25 > coneSetup.coneLevelUpSpeed) {
         speedX += (speedX >= 0 ? 2 : -2);
-        coneSetup.coneLevelUpSpeed = coneSetup.conesAmount / 20;
+        coneSetup.coneLevelUpSpeed = coneSetup.conesAmount / 25;
     }
 
     if (coneSetup.conesAmount < 1) {
@@ -49,10 +52,6 @@ void Cone::Update(ConeNumberSetup& coneSetup, int screenWidth, float deltaTime) 
         }
     } else {
         resetApplied = false;
-    }
-
-    if (((x + width) >= screenWidth - (minX + 5)) || (x <= (minX + 5))) {
-        speedX *= -1;
     }
 
 }

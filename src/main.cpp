@@ -183,7 +183,7 @@ bool app_loop() {
                             break;
                         }
 
-                        conestack[conesetup.conesAmount].position.y = pedestal.GetPedestalPosY() - ((conesetup.conesAmount % 20) * 8);
+                        conestack[conesetup.conesAmount].position.y = pedestal.GetPedestalPosY() - ((conesetup.conesAmount % 10) * 8);
                         conesetup.conesAmount++;
 
                         if (conesetup.conesAmount > highScore) {
@@ -202,7 +202,7 @@ bool app_loop() {
                 break;
             }
         }
-    int newStack = (conesetup.conesAmount / 20) * 20;
+    int newStack = (conesetup.conesAmount / 10) * 10;
 
     if (IsKeyPressed(KEY_ENTER) && gameOver) {
         StopSound(lose);
@@ -221,7 +221,7 @@ bool app_loop() {
         mainMenu = false;
     }
 
-    if(conesetup.conesAmount % 20 == 0 && conesetup.conesAmount > conesetup.prevClear) {
+    if(conesetup.conesAmount % 10 == 0 && conesetup.conesAmount > conesetup.prevClear) {
     memset(conestack, 0, sizeof(conestack));
     conesetup.prevClear = conesetup.conesAmount;
     }
